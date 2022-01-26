@@ -1,105 +1,98 @@
 song = "";
+RwristX = 0;
+RwristY = 0;
+LwristX = 0;
+LwristY = 0;
+score_Lwrist = 0;
+score_Rwrist = 0;
 
-function preload()
-{
-	song = loadSound("music.mp3");
+function preload() {
+    song = loadSound("music.mp3");
 }
-
-scoreRightWrist = 0;
-scoreLeftWrist = 0;
-
-rightWristX = 0;
-rightWristY = 0;
-
-leftWristX = 0;
-leftWristY = 0;
 
 function setup() {
-	canvas =  createCanvas(600, 500);
-	canvas.center();
+    canvas = createCanvas(600, 500);
+    canvas.center();
 
-	video = createCapture(VIDEO);
-	video.hide();
+    video = createCapture(VIDEO);
+    video.hide();
 
-	poseNet = ml5.poseNet(video, modelLoaded);
-	poseNet.on('pose', gotPoses);
+    poseNet = ml5.poseNet(video, modalLoaded);
+    poseNet.on('pose', all_poses);
+
 }
 
-function modelLoaded() {
-  console.log('PoseNet Is Initialized');
+function modalLoaded() {
+    console.log("Modal loaded successfully");
+}
+function all_poses(results) {
+    if (results.length > 0) {
+      
+        score_Rwrist = results[0].pose.keypoints[10].score;
+        score_Lwrist = results[0].pose.keypoints[9].score;
+
+        RwristX = results[0].pose.rightWrist.x;
+        RwristY = results[0].pose.rightWrist.y;
+
+        LwristX = results[0].pose.leftWrist.x;
+        LwristY = results[0].pose.leftWrist.y;
+
+        console.log("Right Wrist X: " + RwristX + ", Right Wrist Y: " + RwristY);
+        console.log("Left Wrist X: " + LwristX + ", Left Wrist Y: " + LwristY);
+    }
 }
 
-function gotPoses(results)
-{
-  if(results.length > 0)
-  {
-	scoreRightWrist =  results[0].pose.keypoints[10].score;
-	scoreLeftWrist =  results[0].pose.keypoints[9].score;
-	console.log("scoreRightWrist = " + scoreRightWrist + " scoreLeftWrist = " + scoreLeftWrist);
-	
-	rightWristX = results[0].pose.rightWrist.x;
-	rightWristY = results[0].pose.rightWrist.y;
-	console.log("rightWristX = " + rightWristX +" rightWristY = "+ rightWristY);
-
-	leftWristX = results[0].pose.leftWrist.x;
-	leftWristY = results[0].pose.leftWrist.y;
-	console.log("leftWristX = " + leftWristX +" leftWristY = "+ leftWristY);
-		
-  }
-}
 
 function draw() {
-	image(video, 0, 0, 600, 500);
+    image(video, 0, 0, 600, 500);
 
-	fill("#FF0000");
-	stroke("#FF0000");
+    fill("#FF0000");
+    stroke("#FF0000");
 
-	if(scoreRightWrist > 0.2)
-	{ 
-		circle(rightWristX,rightWristY,20);
+    if (score_Rwrist > 0.2) {
+        // fill("blue");
+        // stroke("black");
+        circle(RwristX, RwristY, 20);
 
-		if(rightWristY >0 && rightWristY <= 100)
-		{
-			document.getElementById("speed").innerHTML = "Speed = 0.5x";		
-			song.rate(0.5);
-		}
-		else if(rightWristY >100 && rightWristY <= 200)
-		{
-			document.getElementById("speed").innerHTML = "Speed = 1x";		
-			song.rate(1);
-		}
-		else if(rightWristY >200 && rightWristY <= 300)
-		{
-			document.getElementById("speed").innerHTML = "Speed = 1.5x";		
-			song.rate(1.5);
-		}
-		else if(rightWristY >300 && rightWristY <= 400)
-		{
-			document.getElementById("speed").innerHTML = "Speed = 2x";		
-			song.rate(2);
-		}
-		else if(rightWristY >400)
+        if (RwristY > 0 && RwristY <= 100) {
+            document.getElementById("speed").innerHTML = "0.5";
+            song.rate(0.5);
+        } else if (RwristY > 100 && RwristY <= 200) {
+            document.getElementById("speed").innerHTML = "1";
+            song.rate(1);
+        } else if (RwristY > 200 && RwristY <= 300) {
+            document.getElementById("speed").innerHTML = "1.5";
+            song.rate(1.5);
+        } else if (RwristY > 300 && RwristY <= 400) {
+            document.getElementById("speed").innerHTML = "2";
+            song.rate(2);
+        } else if (rightWrist > 400) {
+            document.getElementById("speed").innerHTML = "2.5";
+            song.rate(2.5);
+        }
+        else if(rightWristY >400)
 		{
 			document.getElementById("speed").innerHTML = "Speed = 2.5x";		
 			song.rate(2.5);
 		}
-	}
 
-	if(scoreLeftWrist > 0.2)
-	{
-		circle(leftWristX,leftWristY,20);
-		InNumberleftWristY = Number(leftWristY);
-		new_leftWristY = floor(InNumberleftWristY *2);
-		leftWristY_divide_1000 = new_leftWristY/1000;
-		document.getElementById("volume").innerHTML = "Volume = " + leftWristY_divide_1000;		
-		song.setVolume(leftWristY_divide_1000);	
-	}
 
+    }
+
+    if (score_Lwrist > 0.2) {
+        // fill("red");
+        // stroke("black");
+        circle(LwristX, LwristY, 20);
+        num_LwristY = Number(LwristY);
+        rem_decimal = floor(num_LwristY * 2);
+        final_1 = rem_decimal / 1000;
+        document.getElementById("volume").innerHTML = "Volume = " +final_1;
+        song.setVolume(final_1);
+    }
 }
 
-function play()
-{
-	song.play();
-	song.setVolume(1);
-	song.rate(1);
+function play_music() {
+    song.play();
+    song.setVolume(1);
+    song.rate(1);
 }
