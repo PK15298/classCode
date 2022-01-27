@@ -66,15 +66,11 @@ function draw() {
         } else if (RwristY > 300 && RwristY <= 400) {
             document.getElementById("speed").innerHTML = "2";
             song.rate(2);
-        } else if (rightWrist > 400) {
+        } else if (RwristY > 400) {
             document.getElementById("speed").innerHTML = "2.5";
             song.rate(2.5);
         }
-        else if(rightWristY >400)
-		{
-			document.getElementById("speed").innerHTML = "Speed = 2.5x";		
-			song.rate(2.5);
-		}
+        
 
 
     }
